@@ -9,28 +9,11 @@ type User {
 }
 
 type Query {
-  users: [User!]!
-  user(id: Int!): User!
+  sayHello: String!
 }
 
 type Mutation {
-  createUser(createUserInput: CreateUserInput!): User!
-  updateUser(updateUserInput: UpdateUserInput!): User!
-  removeUser(id: Int!): User!
   register(registerInput: RegisterUserInput!): User!
-}
-
-input CreateUserInput {
-  name: String!
-  email: String!
-  password: String!
-}
-
-input UpdateUserInput {
-  name: String
-  email: String
-  password: String
-  id: Int!
 }
 
 input RegisterUserInput {
