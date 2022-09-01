@@ -16,6 +16,10 @@ export class UsersService {
     return await this.usersRepository.save(createUserInput);
   }
 
+  async findByEmail(email: string): Promise<User> {
+    return await this.usersRepository.findOne({ where: { email } });
+  }
+
   findAll() {
     return `This action returns all users`;
   }
