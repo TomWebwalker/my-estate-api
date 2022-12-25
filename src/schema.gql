@@ -8,16 +8,26 @@ type User {
   email: String!
 }
 
+type AccessToken {
+  access_token: String!
+}
+
 type Query {
   sayHello: String!
 }
 
 type Mutation {
   register(registerInput: RegisterUserInput!): User!
+  login(loginInput: LoginUserInput!): AccessToken
 }
 
 input RegisterUserInput {
   name: String!
+  email: String!
+  password: String!
+}
+
+input LoginUserInput {
   email: String!
   password: String!
 }

@@ -10,10 +10,19 @@ export class UsersService {
   constructor(
     @InjectRepository(User)
     private usersRepository: Repository<User>,
-  ) {}
+  ) {
+  }
 
   async create(createUserInput: CreateUserInput): Promise<User> {
     return await this.usersRepository.save(createUserInput);
+  }
+
+  async findByEmail(email: string): Promise<User> {
+    return await this.usersRepository.findOne({
+      where: {
+        email,
+      },
+    });
   }
 
   findAll() {
