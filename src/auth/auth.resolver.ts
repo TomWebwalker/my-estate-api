@@ -5,6 +5,9 @@ import { RegisterUserInput } from './dto/register-user.input';
 import { LoginUserInput } from './dto/login-user.input';
 import { AuthService } from './auth.service';
 import { AccessToken } from './dto/access-token.object-type';
+import { GqlAuthGuard } from './gql-auth.guard';
+import { UseGuards } from '@nestjs/common';
+import { CurrentUser } from './current-user';
 
 @Resolver(() => User)
 export class AuthResolver {
@@ -18,13 +21,14 @@ export class AuthResolver {
     return this.usersService.create(registerInput);
   }
 
-  @Mutation(() => AccessToken, { nullable: true })
+  @Mutation(() => AccessToken)
   login(@Args('loginInput') loginInput: LoginUserInput) {
     return this.authService.validateUser(loginInput.email, loginInput.password);
   }
 
-  @Query(() => String)
-  sayHello(): string {
-    return 'Hello World!';
+  @Query(() => User)
+  @UseGuards(GqlAuthGuard)
+  profile(@CurrentUser() user: User): Promise<User> {
+    return this.usersService.findOne(user.id);
   }
 }

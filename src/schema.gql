@@ -13,12 +13,12 @@ type AccessToken {
 }
 
 type Query {
-  sayHello: String!
+  profile: User!
 }
 
 type Mutation {
   register(registerInput: RegisterUserInput!): User!
-  login(loginInput: LoginUserInput!): AccessToken
+  login(loginInput: LoginUserInput!): AccessToken!
 }
 
 input RegisterUserInput {

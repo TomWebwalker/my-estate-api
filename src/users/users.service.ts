@@ -10,8 +10,7 @@ export class UsersService {
   constructor(
     @InjectRepository(User)
     private usersRepository: Repository<User>,
-  ) {
-  }
+  ) {}
 
   async create(createUserInput: CreateUserInput): Promise<User> {
     return await this.usersRepository.save(createUserInput);
@@ -29,8 +28,8 @@ export class UsersService {
     return `This action returns all users`;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} user`;
+  findOne(id: number): Promise<User> {
+    return this.usersRepository.findOne({ where: { id } });
   }
 
   update(id: number, updateUserInput: UpdateUserInput) {
