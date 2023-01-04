@@ -13,7 +13,10 @@ export class UsersService {
   ) {}
 
   async create(createUserInput: CreateUserInput): Promise<User> {
-    return await this.usersRepository.save(createUserInput);
+    return await this.usersRepository.save({
+      ...createUserInput,
+      active: false,
+    });
   }
 
   async findByEmail(email: string): Promise<User> {

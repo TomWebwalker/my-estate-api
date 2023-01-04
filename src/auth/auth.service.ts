@@ -1,6 +1,7 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { UsersService } from '../users/users.service';
 import { JwtService } from '@nestjs/jwt';
+import { NotActiveException } from './exceptions/not-active.exception';
 
 @Injectable()
 export class AuthService {
@@ -16,6 +17,11 @@ export class AuthService {
     const user = await this.usersService.findByEmail(email);
     if (user && user.password === pass) {
       const { id, name } = user;
+
+      if (!user.active) {
+        throw new NotActiveException();
+      }
+
       return {
         access_token: this.jwtService.sign({ id, name }),
       };
