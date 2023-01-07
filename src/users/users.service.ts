@@ -2,9 +2,9 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateUserInput } from './dto/create-user.input';
-import { UpdateUserInput } from './dto/update-user.input';
 import { User } from './entities/user.entity';
 import * as bcrypt from 'bcrypt';
+import { UserRole } from './enums/user-role';
 
 @Injectable()
 export class UsersService {
@@ -14,11 +14,11 @@ export class UsersService {
   ) {}
 
   async create(createUserInput: CreateUserInput): Promise<User> {
-    const saltOrRounds = 10;
-    const password = await bcrypt.hash(createUserInput.password, saltOrRounds);
+    const password = await bcrypt.hash(createUserInput.password, 10);
     return await this.usersRepository.save({
       ...createUserInput,
       password,
+      role: UserRole.USER,
       active: false,
     });
   }
@@ -31,19 +31,7 @@ export class UsersService {
     });
   }
 
-  findAll() {
-    return `This action returns all users`;
-  }
-
   findOne(id: number): Promise<User> {
     return this.usersRepository.findOne({ where: { id } });
-  }
-
-  update(id: number, updateUserInput: UpdateUserInput) {
-    return `This action updates a #${id} user`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} user`;
   }
 }
