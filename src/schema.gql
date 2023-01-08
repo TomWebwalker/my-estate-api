@@ -14,6 +14,7 @@ type AccessToken {
 }
 
 type Query {
+  users: [User!]!
   profile: User!
 }
 

@@ -8,6 +8,9 @@ import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
 import { User } from './users/entities/user.entity';
 import { UsersModule } from './users/users.module';
+import { APP_GUARD } from '@nestjs/core';
+import { RolesGuard } from './users/guards';
+import { GqlAuthGuard } from './core/guards';
 
 @Module({
   imports: [
@@ -30,6 +33,16 @@ import { UsersModule } from './users/users.module';
     }),
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    {
+      provide: APP_GUARD,
+      useClass: GqlAuthGuard,
+    },
+    {
+      provide: APP_GUARD,
+      useClass: RolesGuard,
+    },
+  ],
 })
 export class AppModule {}
