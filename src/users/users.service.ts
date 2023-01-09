@@ -1,10 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { CreateUserInput } from './dto/create-user.input';
+import { CreateUserInput } from './dto';
 import { User } from './entities/user.entity';
 import * as bcrypt from 'bcrypt';
 import { UserRole } from './enums';
+import { SortDir } from '../shared/dto';
 
 @Injectable()
 export class UsersService {
@@ -35,7 +36,21 @@ export class UsersService {
     return this.usersRepository.findOne({ where: { id } });
   }
 
-  getAll(): Promise<User[]> {
-    return this.usersRepository.find();
+  getRows(
+    take: number,
+    skip: number,
+    sortDir: SortDir = SortDir.ASC,
+    sortBy?: string,
+  ): Promise<[User[], number]> {
+    let order = {};
+    const sortableColumns = ['id', 'name', 'email'];
+    if (sortBy && sortableColumns.includes(sortBy)) {
+      order = { [sortBy]: sortDir };
+    }
+    return this.usersRepository.findAndCount({
+      take,
+      skip,
+      order,
+    });
   }
 }

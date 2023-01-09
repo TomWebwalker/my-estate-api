@@ -9,13 +9,23 @@ type User {
   role: String!
 }
 
+type UserRows {
+  rows: [User!]!
+  total: Int!
+}
+
 type AccessToken {
   access_token: String!
 }
 
 type Query {
-  users: [User!]!
+  users(offset: Int! = 0, limit: Int! = 10, sortBy: String = "", sortDir: SortDir): UserRows!
   profile: User!
+}
+
+enum SortDir {
+  ASC
+  DESC
 }
 
 type Mutation {
