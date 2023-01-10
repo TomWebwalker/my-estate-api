@@ -6,6 +6,7 @@ import { User } from './entities/user.entity';
 import * as bcrypt from 'bcrypt';
 import { UserRole } from './enums';
 import { SortDir } from '../shared/dto';
+import { UpdateAdminUserInput } from './dto/update-admin-user.input';
 
 @Injectable()
 export class UsersService {
@@ -14,14 +15,31 @@ export class UsersService {
     private usersRepository: Repository<User>,
   ) {}
 
-  async create(createUserInput: CreateUserInput): Promise<User> {
+  async create(
+    createUserInput: CreateUserInput,
+    role: UserRole = UserRole.USER,
+    active = false,
+  ): Promise<User> {
     const password = await bcrypt.hash(createUserInput.password, 10);
     return await this.usersRepository.save({
       ...createUserInput,
       password,
-      role: UserRole.USER,
-      active: false,
+      role,
+      active,
     });
+  }
+
+  async update(user: UpdateAdminUserInput): Promise<boolean> {
+    delete user.email;
+    return await this.usersRepository
+      .update(user.id, user)
+      .then((result) => result.affected > 0);
+  }
+
+  async delete(id: number): Promise<boolean> {
+    return await this.usersRepository
+      .delete(id)
+      .then((result) => result.affected > 0);
   }
 
   async findByEmail(email: string): Promise<User> {
