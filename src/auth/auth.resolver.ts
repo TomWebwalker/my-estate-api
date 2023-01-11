@@ -1,12 +1,12 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
-import { User } from 'src/users/entities/user.entity';
-import { UsersService } from 'src/users/users.service';
 import { RegisterUserInput } from './dto/register-user.input';
 import { LoginUserInput } from './dto/login-user.input';
 import { AuthService } from './auth.service';
 import { AccessToken } from './dto/access-token.object-type';
 import { CurrentUser } from './decorators/current-user';
 import { IsPublic } from '../core/enums';
+import { User } from '../users/entities/user.entity';
+import { UsersService } from '../users/users.service';
 
 @Resolver(() => User)
 export class AuthResolver {
