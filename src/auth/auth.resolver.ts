@@ -1,13 +1,12 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
-import { User } from 'src/users/entities/user.entity';
-import { UsersService } from 'src/users/users.service';
 import { RegisterUserInput } from './dto/register-user.input';
 import { LoginUserInput } from './dto/login-user.input';
 import { AuthService } from './auth.service';
 import { AccessToken } from './dto/access-token.object-type';
-import { GqlAuthGuard } from './gql-auth.guard';
-import { UseGuards } from '@nestjs/common';
-import { CurrentUser } from './current-user';
+import { CurrentUser } from './decorators/current-user';
+import { IsPublic } from '../core/enums';
+import { User } from '../users/entities/user.entity';
+import { UsersService } from '../users/users.service';
 
 @Resolver(() => User)
 export class AuthResolver {
@@ -17,18 +16,19 @@ export class AuthResolver {
   ) {}
 
   @Mutation(() => User)
+  @IsPublic(true)
   register(@Args('registerInput') registerInput: RegisterUserInput) {
     return this.usersService.create(registerInput);
   }
 
   @Mutation(() => AccessToken)
+  @IsPublic(true)
   login(@Args('loginInput') loginInput: LoginUserInput) {
     return this.authService.validateUser(loginInput.email, loginInput.password);
   }
 
   @Query(() => User)
-  @UseGuards(GqlAuthGuard)
-  profile(@CurrentUser() user: User): Promise<User> {
-    return this.usersService.findOne(user.id);
+  profile(@CurrentUser() user: User): User {
+    return user;
   }
 }

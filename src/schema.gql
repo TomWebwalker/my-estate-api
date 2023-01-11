@@ -9,17 +9,55 @@ type User {
   role: String!
 }
 
+type UserRows {
+  rows: [User!]!
+  total: Int!
+}
+
 type AccessToken {
   access_token: String!
 }
 
 type Query {
+  users(offset: Int! = 0, limit: Int! = 10, sortBy: String = "", sortDir: SortDir): UserRows!
+  user(id: Int!): User
   profile: User!
 }
 
+enum SortDir {
+  ASC
+  DESC
+}
+
 type Mutation {
+  userCreate(adminUser: CreateAdminUserInput!): User!
+  userUpdate(adminUser: UpdateAdminUserInput!): Boolean!
+  userDelete(id: Int!): Boolean!
   register(registerInput: RegisterUserInput!): User!
   login(loginInput: LoginUserInput!): AccessToken!
+}
+
+input CreateAdminUserInput {
+  name: String!
+  email: String!
+  password: String!
+  role: UserRole!
+  active: Boolean!
+}
+
+enum UserRole {
+  ADMIN
+  MODERATOR
+  USER
+}
+
+input UpdateAdminUserInput {
+  name: String
+  email: String
+  password: String
+  role: UserRole
+  active: Boolean
+  id: Int!
 }
 
 input RegisterUserInput {
