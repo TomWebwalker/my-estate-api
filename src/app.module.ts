@@ -9,6 +9,7 @@ import { UsersModule } from './users/users.module';
 import { APP_GUARD } from '@nestjs/core';
 import { RolesGuard } from './users/guards';
 import { GqlAuthGuard } from './core/guards';
+import * as process from 'process';
 
 @Module({
   imports: [
@@ -28,6 +29,10 @@ import { GqlAuthGuard } from './core/guards';
       driver: ApolloDriver,
       autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
       formatError: ({ message }) => ({ message }),
+      cors: {
+        origin: 'http://localhost:4200',
+        credentials: false,
+      },
     }),
   ],
   providers: [
