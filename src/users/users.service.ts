@@ -6,6 +6,7 @@ import { User } from './entities/user.entity';
 import { UserRole } from './enums';
 import { SortDir } from '../shared/dto';
 import { UpdateAdminUserInput } from './dto/update-admin-user.input';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UsersService {
@@ -19,7 +20,9 @@ export class UsersService {
     role: UserRole = UserRole.USER,
     active = false,
   ): Promise<User> {
+    const password = await bcrypt.hash(createUserInput.password, 10);
     return await this.usersRepository.save({
+      password,
       ...createUserInput,
       role,
       active,
