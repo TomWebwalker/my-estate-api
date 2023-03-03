@@ -15,4 +15,4 @@ RUN npm run build
 
 EXPOSE 3000
 
-CMD ["npm run start:prod"]
+CMD ["sh", "-c", "./cloud_sql_proxy -instances=$CLOUD_SQL_CONNECTION_NAME=tcp:0.0.0.0:3306 && npm run start:prod"]
