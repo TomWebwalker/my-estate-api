@@ -2,7 +2,8 @@ version: "3.9"
 services:
 
   my-estate-api:
-    image: eu.gcr.io/my-estate-377108/my-estate-api/my-estate-api@sha256:f1b52f54da52859367e0103ca20fb7fbf39f93029621afab3fc6adf96289df43
+    build:
+      context: .
     depends_on:
       - mysqldb
     ports:

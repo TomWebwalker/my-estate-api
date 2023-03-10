@@ -7,6 +7,8 @@ import { CurrentUser } from './decorators/current-user';
 import { IsPublic } from '../core/enums';
 import { User } from '../users/entities/user.entity';
 import { UsersService } from '../users/users.service';
+import { UseFilters } from '@nestjs/common';
+import { TypeOrmExceptionFilter } from '../shared/filters';
 
 @Resolver(() => User)
 export class AuthResolver {
@@ -17,6 +19,7 @@ export class AuthResolver {
 
   @Mutation(() => User)
   @IsPublic(true)
+  @UseFilters(TypeOrmExceptionFilter)
   register(@Args('registerInput') registerInput: RegisterUserInput) {
     return this.usersService.create(registerInput);
   }
